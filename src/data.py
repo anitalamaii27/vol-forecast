@@ -1,3 +1,4 @@
+from arch import arch_model
 import numpy as np 
 import pandas as pd 
 import yfinance as yf 
@@ -27,3 +28,12 @@ if __name__ == "__main__":
     rmse = np.sqrt(((test["target"] - pred) ** 2).mean())
     print("train rows:", len(train), "test rows:", len(test))
     print("persistence RMSE:", rmse)
+
+
+    r100 = df["log_ret"] * 100
+    am = arch_model(r100, vol="Garch", p=1, q=1, mean="Zero")
+    res = am.fit(last_obs=split, disp="off")
+    fc = res.forecast(horizon=5, start=split, reindex=False)
+    garch_pred = np.sqrt(fc.variance.mean(axis=1))
+    g = np.sqrt(((test["target"] - garch_pred) ** 2).mean())
+    print("GARCH RMSE:", g)
