@@ -12,5 +12,17 @@ if __name__ == "__main__":
     df["log_ret"] = np.log(df["Close"] / df["Close"].shift(1))
     df["rv"] = df["log_ret"].rolling(5).std()
     df["target"] = df["rv"].shift(-5)
-    print(df.tail())
-    print(df.shape)
+
+    df = df.dropna()
+
+    split = int(len(df) * 0.8)
+    train = df.iloc[:split]
+    test = df.iloc[split:]
+    pred = test["rv"]
+    long_vol = df["log_ret"].rolling(20).std()
+    pred2 = long_vol.loc[test.index]
+    rmse2 = np.sqrt(((test["target"] - pred2) ** 2).mean())
+    print("20-day baseline RMSE:", rmse2)
+    rmse = np.sqrt(((test["target"] - pred) ** 2).mean())
+    print("train rows:", len(train), "test rows:", len(test))
+    print("persistence RMSE:", rmse)
