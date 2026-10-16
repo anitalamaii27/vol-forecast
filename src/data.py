@@ -34,6 +34,6 @@ if __name__ == "__main__":
     am = arch_model(r100, vol="Garch", p=1, q=1, mean="Zero")
     res = am.fit(last_obs=split, disp="off")
     fc = res.forecast(horizon=5, start=split, reindex=False)
-    garch_pred = np.sqrt(fc.variance.mean(axis=1))
+    garch_pred = np.sqrt(fc.variance.mean(axis=1)) / 100
     g = np.sqrt(((test["target"] - garch_pred) ** 2).mean())
     print("GARCH RMSE:", g)
