@@ -19,10 +19,11 @@ if __name__ == "__main__":
     train = df.iloc[:split]
     test = df.iloc[split:]
     pred = test["rv"]
-    long_vol = df["log_ret"].rolling(20).std()
-    pred2 = long_vol.loc[test.index]
-    rmse2 = np.sqrt(((test["target"] - pred2) ** 2).mean())
-    print("20-day baseline RMSE:", rmse2)
+    for w in [5, 20, 60, 120]:
+        vol = df["log_ret"].rolling(w).std()
+        p = vol.loc[test.index]
+        r = np.sqrt(((test["target"] - p) ** 2).mean())
+        print(w, "day baseline RMSE:", r)
     rmse = np.sqrt(((test["target"] - pred) ** 2).mean())
     print("train rows:", len(train), "test rows:", len(test))
     print("persistence RMSE:", rmse)
