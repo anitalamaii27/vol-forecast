@@ -10,6 +10,7 @@ def load_spy(start="2010-01-01"):
 if __name__ == "__main__":
     df = load_spy()
     df["log_ret"] = np.log(df["Close"] / df["Close"].shift(1))
+    df["rv"] = df["log_ret"].rolling(5).std()
+    df["target"] = df["rv"].shift(-5)
     print(df.tail())
     print(df.shape)
-    
