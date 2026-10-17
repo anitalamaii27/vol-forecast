@@ -41,3 +41,13 @@ if __name__ == "__main__":
 
     X, y = make_windows(df["log_ret"].values, df["target"].values)
     print(X.shape, y.shape)
+
+    cut = split - 19
+    X_train, y_train = X[:cut - 5], y[:cut - 5]
+    X_test, y_test = X[cut:], y[cut:]
+
+    mu = X_train.mean()
+    sd = X_train.std()
+    X_train = (X_train - mu) / sd
+    X_test = (X_test - mu) / sd
+    print(X_train.shape, X_test.shape)
