@@ -1,3 +1,4 @@
+from windows import make_windows
 from arch import arch_model
 import numpy as np 
 import pandas as pd 
@@ -37,3 +38,6 @@ if __name__ == "__main__":
     garch_pred = np.sqrt(fc.variance.mean(axis=1)) / 100
     g = np.sqrt(((test["target"] - garch_pred) ** 2).mean())
     print("GARCH RMSE:", g)
+
+    X, y = make_windows(df["log_ret"].values, df["target"].values)
+    print(X.shape, y.shape)
