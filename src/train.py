@@ -27,22 +27,26 @@ Xtr = torch.tensor(X_train, dtype=torch.float32)
 ytr = torch.tensor(y_train * 100, dtype=torch.float32)
 Xte = torch.tensor(X_test, dtype=torch.float32)
 
-model = VolLSTM()
-opt = torch.optim.Adam(model.parameters(), lr=1e-3)
-loss_fn = nn.MSELoss()
-
-for epoch in range(30):
-    model.train()
-    perm = torch.randperm(len(Xtr))
-    for i in range(0, len(Xtr), 64):
-        idx = perm[i:i + 64]
-        opt.zero_grad()
-        loss = loss_fn(model(Xtr[idx]), ytr[idx])
-        loss.backward()
-        opt.step()
-
+def run(seed):
+    torch.manual_seed(seed)
+    model = VolLSTM()
+    opt = torch.optim.Adam(model.parameters(), lr=1e-3)
+    loss_fn = nn.MSELoss()
+    for epoch in range(30):
+        model.train()
+        perm = torch.randperm(len(Xtr))
+        for i in range(0, len(Xtr), 64):
+            idx = perm[i:i + 64]
+            opt.zero_grad()
+            loss = loss_fn(model(Xtr[idx]), ytr[idx])
+            loss.backward()
+            opt.step()
     model.eval()
     with torch.no_grad():
         pred = model(Xte).numpy() / 100
-    rmse = np.sqrt(((y_test - pred) ** 2).mean())
-    print(epoch, "test RMSE:", rmse)
+    return np.sqrt(((y_test - pred) ** 2).mean())
+
+
+scores = [run(s) for s in range(5)]
+print(scores)
+print("mean:", np.mean(scores), "std:", np.std(scores))
