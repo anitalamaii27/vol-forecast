@@ -1,6 +1,3 @@
-# vol-forecast
-"LSTM vs GARCH realized volatility forecasting with walk-forward validation"
-
 # Forecasting SPY Volatility: LSTM vs GARCH
 
 Forecasts the next 5 days of realized volatility for SPY using a PyTorch LSTM, and compares it to GARCH(1,1) and simple rolling-average baselines.
