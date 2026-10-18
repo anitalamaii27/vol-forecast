@@ -47,8 +47,7 @@ def run(seed, Xtr, ytr, Xte, y_test):
     return np.sqrt(((y_test - pred) ** 2).mean())
 
 
-for lookback in [10, 20, 60]:
-    data = prepare(lookback)
-    scores = [run(s, *data) for s in range(5)]
-    print(lookback, "test windows:", len(data[2]),
-          "mean:", np.mean(scores), "std:", np.std(scores))
+data = prepare(20)
+for hidden in [16, 32, 64]:
+    scores = [run(s, *data, hidden=hidden) for s in range(5)]
+    print(hidden, "mean:", np.mean(scores), "std:", np.std(scores))
