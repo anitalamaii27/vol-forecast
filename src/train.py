@@ -27,9 +27,9 @@ def prepare(lookback):
     return Xtr, ytr, Xte, y_test
 
 
-def run(seed, Xtr, ytr, Xte, y_test):
+def run(seed, Xtr, ytr, Xte, y_test, hidden=32):
     torch.manual_seed(seed)
-    model = VolLSTM()
+    model = VolLSTM(hidden=hidden)
     opt = torch.optim.Adam(model.parameters(), lr=1e-3)
     loss_fn = nn.MSELoss()
     for epoch in range(30):
